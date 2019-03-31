@@ -1,0 +1,46 @@
+# Game: PARKAN: THE IMPERIAL CHRONICLES (script 0.1)
+# Description:
+# script to unpack files from .lib archives
+# Link:
+
+IDString "NL\0\1"
+GoTo 4
+get COUNT short
+
+GoTo 20
+get SIZE long
+
+# unpack file table to memory
+
+# reading encrypted file table to memory
+XMath TABLE_SIZE "COUNT*32"
+log MEMORY_FILE 32 TABLE_SIZE
+    
+# decrypting
+Set B byte SIZE
+Set C long 0
+XMath C "SIZE >> 8"                                
+
+for i = 0 < TABLE_SIZE
+    GetVarChr MB MEMORY_FILE i byte
+    # multiple xor    
+    XMath B "((B * 2) ^ C) & 255"
+    XMath C "((C & 255) >> 1) ^ B"
+    math MB u^ B
+    PutVarChr MEMORY_FILE i MB byte     
+next i   
+
+# unpacking files
+for i = 0 < COUNT
+    XMath POS "i*32"
+    GoTo POS MEMORY_FILE
+    GetDString NAME 8 MEMORY_FILE
+    
+    XMath POS "i*32 + 24"    
+    GetVarChr OFFSET MEMORY_FILE POS long
+    
+    XMath POS "i*32 + 28"    
+    GetVarChr SIZE MEMORY_FILE POS long 
+    
+    Log NAME OFFSET SIZE   
+next i  

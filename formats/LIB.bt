@@ -1,0 +1,53 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+local uint i;
+
+struct {
+  char Magic[4]; // NL01
+  UINT16 FileCount;
+  UINT16 FileCount;
+  UINT Unknown;
+  UINT16 Unknown;
+  UINT16 Unknown;
+  UINT16 Unknown;
+  UINT16 Unknown;
+  UINT Size;
+  BYTE Reserved[8];
+} FILE_HEADER;
+
+// this section is encrypted with xor, need to be decrypted first
+struct {
+  struct {
+    char FileName[8];
+    UINT Unknown;
+    UINT Unknown;
+    UINT16 Unknown;
+    UINT16 Index; //??
+    UINT Unknown;
+    UINT Offset;
+    UINT Size;
+  } FILE_REC[FILE_HEADER.FileCount];
+} FILE_TABLE;
+
+struct {
+  for (i = 0; i < FILE_HEADER.FileCount; ++i)
+  {
+    FSeek(FILE_TABLE.FILE_REC[i].Offset);
+    struct {
+      BYTE Data[FILE_TABLE.FILE_REC[i].Size];
+    } FILE;
+  };
+} FILES;
+
+

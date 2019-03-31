@@ -1,0 +1,1 @@
+F:\git\qbms\quickbms.exe -d -Y -F "*.lib" lib.bms "F:\Games\Parkan - The Imperial Chronicles" unpacked

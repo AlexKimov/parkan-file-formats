@@ -1,5 +1,3 @@
-# parkan-file-formats
-
 # Описание
 Форматы серии игр **Parkan**.
 

@@ -4,7 +4,7 @@
 ### Шаблоны
 | № | Формат | Прогресс  | Шаблон |  Описание   |
 | :-- | :------- | :-- | :-- | :-- |
-|  **1**  |  .lib  |  | [LIB.bt](https://github.com/AlexKimov/parkan-file-formats/blob/master/formats/LIB.bt)  | Архивы игры **Parkan: Хроники Империи** с файлами, частично зашифрован |
+|  **1**  |  .lib  |  | [LIB.bt](https://github.com/AlexKimov/parkan-file-formats/blob/master/formats/LIB.bt)  | Архивы игры **Parkan: Хроники Империи** с файлами, часть файла зашифрована |
 
 ### Скрипты
 | № | Название  | Скрипт |  Описание   |

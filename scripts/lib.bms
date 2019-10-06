@@ -4,7 +4,7 @@
 # Link:
 
 IDString "NL\0\1"
-GoTo 4
+#GoTo 4
 get COUNT short
 
 GoTo 20

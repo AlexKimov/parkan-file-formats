@@ -1,1 +1,1 @@
-F:\git\qbms\quickbms.exe -d -Y -F "*.lib" lib.bms "F:\Games\Parkan - The Imperial Chronicles" unpacked
+F:\git\qbms\quickbms.exe -K -d -e -Y -F "*.LIB" lib.bms "F:\git\parkan\scripts" unpacked

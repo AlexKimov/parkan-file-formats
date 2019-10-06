@@ -34,9 +34,9 @@ struct {
     UINT Unknown;
     UINT16 Unknown;
     UINT16 Index; //??
-    UINT Unknown;
+    UINT UnpackedSize;
     UINT Offset;
-    UINT Size;
+    UINT PackedSize;
   } FILE_REC[FILE_HEADER.FileCount];
 } FILE_TABLE;
 
@@ -45,7 +45,7 @@ struct {
   {
     FSeek(FILE_TABLE.FILE_REC[i].Offset);
     struct {
-      BYTE Data[FILE_TABLE.FILE_REC[i].Size];
+      BYTE Data[FILE_TABLE.FILE_REC[i].PackedSize];
     } FILE;
   };
 } FILES;

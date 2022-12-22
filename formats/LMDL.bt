@@ -1,0 +1,243 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+local uint i;
+
+LittleEndian();
+
+struct {
+  CHAR Magic[9];
+  UINT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  BYTE Unknown1[3];
+} HEADER;
+
+UINT ChunkCount;
+struct {
+  CHAR Name[64];
+  UINT Offset;  
+} CHUNK_REC[ChunkCount];
+
+BYTE DataReserved[2204 - ChunkCount*68 - 28];
+
+for (i = 0; i < ChunkCount; ++i)
+  switch (CHUNK_REC[i].Name)
+  {
+      case "vertexes":
+        UINT VertexCount;
+        struct {
+          UINT16 PosIndex;
+          UBYTE Index11;
+          UBYTE Index12;
+          UINT16 Index;
+          UINT16 TexCoordIndex;
+          UINT16 Index;
+          UINT16 Index;
+        } VERTEXES[VertexCount];
+        break;
+      case "vertex_tris":
+        UINT vtCount;
+        struct {
+          UINT16 I1;
+          UINT16 I2;
+          UINT16 I3;
+        } VERTEX_TRIS[vtCount];
+        break;
+      case "positions":
+        UINT PosCount;
+        struct {
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+        } POSITIONS[PosCount];
+        break;
+      case "position_tris":    
+        UINT ptCount;
+        struct {
+          UINT16 I1;
+          UINT16 I2;
+          UINT16 I3;
+        } POSITIONS_TRIS[ptCount];
+        break;
+      case "normals":    
+        UINT normCount;
+        struct {
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+        } NORMALS[normCount];
+        break;
+      case "binormals":    
+        UINT bnormCount;
+        struct {
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+        } BINORMALS[bnormCount];
+        break;
+      case "tangents":    
+        UINT tangentCount;
+        struct {
+          FLOAT X;
+          FLOAT Y;
+          FLOAT Z;
+        } TANGENTS[tangentCount];
+        break;
+      case "texcoords":    
+        UINT texcorCount;
+        struct {
+          FLOAT U;
+          FLOAT V;
+        } TEXCOORDS[texcorCount];
+        break;
+      case "materials":    
+        UINT matCount;
+        struct {
+          CHAR name[64];
+        } MATERIALS[matCount];
+        break;
+      case "material_tris":    
+        UINT mtCount;
+        struct {
+          UINT16 Unknown;
+        } MATERIAL_TRIS[mtCount];
+        break;
+      case "edges":    
+        UINT Count;
+        UINT edgeCount;
+        struct {
+          UINT16 I1;
+          UINT16 I2;
+          UINT16 I3;          
+        } EDGES[edgeCount];
+        break;
+      case "bones":    
+        UINT boneCount;
+        struct {
+          CHAR name[64];
+          CHAR parentName[64]; 
+          struct {
+            FLOAT X;
+            FLOAT Y;
+            FLOAT Z;
+            FLOAT W;
+           
+            FLOAT X;
+            FLOAT Y;
+            FLOAT Z; 
+            FLOAT W;
+        
+            FLOAT X;
+            FLOAT Y;
+            FLOAT Z;
+            FLOAT W;
+        
+            FLOAT X;
+            FLOAT Y;
+            FLOAT Z; 
+            FLOAT W;
+          } MATRIX_4x4;
+         UINT Count;
+         UBYTE B[Count]; 
+        } BONES[boneCount] <optimize=false>;
+        break;
+      case "bonelinks":    
+        UINT bonelinksCount;
+        struct {
+          UINT16 Unknown;
+        } BONELINKS[bonelinksCount];
+        break;
+      case "animation":    
+        UINT animationsCount;
+        UINT frameCount;    
+        struct {
+          CHAR boneName[64];
+          FLOAT X;
+          UINT16 I1;
+          UINT16 I2;
+          UINT16 I3;
+          UINT16 I1;
+          UINT16 I2;
+          UINT16 I3;
+          UINT16 I1;
+          UINT16 I1;
+        } ANIMATIONS[animationsCount] <optimize=false>;
+        
+        struct {
+          UINT Index;
+          struct { 
+            FLOAT X;
+            FLOAT Y;
+            FLOAT Z; 
+          } SCALE;
+        
+          struct { 
+            FLOAT X;
+            FLOAT Y;
+            FLOAT Z; 
+            FLOAT W;
+          } ROTATION_QUAT;
+
+          struct {
+            FLOAT X;
+            FLOAT Y; 
+            FLOAT Z;
+          } POSITION;
+        } FRAME[frameCount];    
+        break;
+      case "bsp": 
+        UINT nodeCount;
+        struct {
+          UINT I1;
+          UINT I1;
+          FLOAT I1;
+          INT I1;
+          UINT I1;
+        } BSP[nodeCount];
+        FSeek(6052570);
+      case "portals": 
+        UINT portalCount;
+        struct {
+          UINT I1;
+          UINT I1;
+          UINT I1;
+
+        } PORTAL[portalCount];
+        FSeek(6052570);
+      case "light_animations": 
+        UINT ltCount;
+        struct {
+          UINT I1;
+          UINT I1;
+          UINT I1;
+          UINT I1;
+        } LIGHT_ANIMATIONS[ltCount];
+        FSeek(6052570);
+      case "bbox_data":    
+        struct {
+            FLOAT X;
+            FLOAT Y; 
+            FLOAT Z;
+            FLOAT X;
+            FLOAT Y; 
+            FLOAT Z; 
+        
+            FLOAT X;
+            FLOAT Y; 
+            FLOAT Z; 
+            FLOAT W;   
+        } BBOX_DATA;
+  };
+    
+    

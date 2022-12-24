@@ -3,6 +3,8 @@
 # script to unpack files from .lib archives
 # Link:
 
+endian little
+
 IDString "NL\0\1"
 #GoTo 4
 get COUNT short
@@ -16,7 +18,7 @@ get SIZE long
 XMath TABLE_SIZE "COUNT*32"
 log MEMORY_FILE 32 TABLE_SIZE
     
-# decrypting
+# decrypting file tabble
 Set B byte SIZE
 Set C long 0
 XMath C "SIZE >> 8"                                
@@ -32,15 +34,117 @@ next i
 
 # unpacking files
 for i = 0 < COUNT
-    XMath POS "i*32"
-    GoTo POS MEMORY_FILE
-    GetDString NAME 8 MEMORY_FILE
-    
+    XMath pos "i*32"
+    GoTo pos MEMORY_FILE
+    GetDString fname 8 MEMORY_FILE
+     
+    XMath POS "i*32 + 16" 
+    GetVarChr type MEMORY_FILE POS SHORT
+
+    XMath POS "i*32 + 20" 
+    GetVarChr size_unpacked MEMORY_FILE POS long
+
     XMath POS "i*32 + 24"    
-    GetVarChr OFFSET MEMORY_FILE POS long
+    GetVarChr offset MEMORY_FILE POS long
     
     XMath POS "i*32 + 28"    
-    GetVarChr SIZE MEMORY_FILE POS long 
+    GetVarChr size MEMORY_FILE POS long
     
-    Log NAME OFFSET SIZE   
-next i  
+    if type == 64 || type == 128
+        CallFunction EXTRACT fname offset size size_unpacked
+    endif     
+next i 
+
+startfunction EXTRACT fname offset size size_unpacked
+    GoTo offset
+   
+    # some vars
+    set cycle BYTE 0
+    set k BYTE 0
+    set a BYTE 0
+    set flag BYTE 0
+    set current_pos LONG 0 # current position in input buffer
+    set distance LONG 0
+    set n LONG 0
+    set current_pos2 LONG 0 # current position in outnput buffer
+    set dictn_current_pos LONG 4078 # current position in dictionary buffer
+
+    # set buffers
+    log MEMORY_FILE2 offset size  # set input buffer
+    log MEMORY_FILE3 0 0  # set output buffer   
+    
+    # set dictionary
+    # putvarchr MEMORY_FILE4 5000 0  # allocate memory
+    # log MEMORY_FILE4 0 0           # create the file    
+    
+    # set length SHORT 4078;
+    # xmath length "length << 2"
+    # set tmp long 0x20202020;
+    # fill dictionary with 0x20
+    # for k = 0 < length   
+        # PutVarChr MEMORY_FILE4 n tmp long
+        # xmath n "k + 4"         
+    # next k
+    
+    log MEMORY_FILE4 0 0                 # create the file
+    putvarchr MEMORY_FILE4 5000 0x20   
+  
+    do
+        xmath k "cycle & 1" 
+        math cycle >>= 1
+        
+        if k == 0
+            GetVarChr flag MEMORY_FILE2 current_pos BYTE # get control byte
+            math current_pos += 1
+            set cycle BYTE 0x7F            
+        endif
+        
+        xmath k "flag & 1" 
+        math flag >>= 1
+
+        if k != 0 
+            GetVarChr tmp MEMORY_FILE2 current_pos byte # get raw byte    
+            
+            PutVarChr MEMORY_FILE4 dictn_current_pos tmp byte            
+            PutVarChr MEMORY_FILE3 current_pos2 tmp byte  
+            
+            xmath dictn_current_pos "(dictn_current_pos + 1) & 0xFFF;" 
+            math current_pos2 += 1
+            math current_pos += 1    
+        elif k == 0 
+            # two bytes -> where to get bytes inside dictionary   
+            GetVarChr tmp MEMORY_FILE2 current_pos byte
+            xmath n "current_pos + 1"            
+            GetVarChr tmp2 MEMORY_FILE2 n byte 
+            
+            # length - number of bytes to copy
+            # distance - offset in dictionary buffer
+            xmath distance  "tmp | (16 * (tmp2 & 0xF0))"                                         
+            xmath length "(tmp2 & 0xF) + 3"           
+      
+            # print %distance%, 
+            # print %length%
+            
+            # distance - offset to bytes in output buffer 
+             
+            for a = 0 < length            
+                GetVarChr tmp MEMORY_FILE4 distance byte # get byte from dictionary
+                
+                PutVarChr MEMORY_FILE4 dictn_current_pos tmp byte
+                xmath dictn_current_pos "(dictn_current_pos + 1) & 0xFFF;"               
+                xmath distance "(distance + 1) & 0xFFF;"
+                
+                PutVarChr MEMORY_FILE3 current_pos2 tmp byte  
+                math current_pos2 += 1
+            next a   
+
+            math current_pos += 2            
+        endif
+        
+        if current_pos >= size
+            Break
+        endif        
+    while current_pos2 < size_unpacked
+
+    log fname 0 size_unpacked MEMORY_FILE3    
+endfunction 

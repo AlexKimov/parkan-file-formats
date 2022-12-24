@@ -9,6 +9,8 @@
 //   History: 
 //------------------------------------------------
 
+LittleEndian();
+
 local uint fileCount, c, i;
 local ubyte b, n;
 

@@ -1,5 +1,6 @@
-# Описание
-Форматы файлов серии игр **Parkan**.
+## Описание
+
+Форматы файлов серии игр **Parkan**. Структуру формат можно помотреть с помощью шаблона для программы 010Editor.
 
 #### Текущие планы:
 
@@ -14,8 +15,19 @@
 | :-- | :------- | :-- | :-- | :-- |
 |  **1**  |  .lib  |  | [LIB.bt](https://github.com/AlexKimov/parkan-file-formats/blob/master/formats/LIB.bt)  | Архивы игры **Parkan: Хроники Империи** с файлами, часть файла зашифрована |
 
+    Как использовать шаблоны 010Editor
+    1. Нужен 010Editor.
+    2. Открыть нужеый вам .lib файл в программе. Меню File - Open File...
+    3. Применить скрипт decodeLIB.1sc, чтобы был доступ к зашифрованной таблице с расположением файлов внутри .lib. Меню Scripts - Open Script и Run Script.
+    4. Применить шаблон LIB.bt. Меню Templates - Open Template и Run Template.
+
 ### Скрипты
 | № | Название  | Скрипт |  Описание   |
 | :-- | :------- | :-- | :-- | 
 |  **1**  |  decodeLIB.1sc  |  [decodeLIB.1sc](https://github.com/AlexKimov/parkan-file-formats/blob/master/scripts/decodeLIB.1sc)  | Расшифровка таблицы со списком файлов внутри .lib (**Parkan: Хроники Империи**) для правильной работы шаблона **LIB.bt** |
 |  **2**  |  lib.bms  |  [lib.bms](https://github.com/AlexKimov/parkan-file-formats/blob/master/scripts/lib.bms)  | Распаковка файлов из .lib (**Parkan: Хроники Империи**) архивов |
+
+    Как использовать
+    1. Нужен quickbms https://aluigi.altervista.org/quickbms.htm
+    2. Для запуска в репозитории лежит bat файл с настройками, нужно открыть его и задать свои пути: до места, где находится quickbms, папки с игрой и места куда нужно сохранить результат.
+    3. Запустить процесс через bat файл или вручную задава свои параметры. Можно варить пельмени, работает quickbms медленно.
